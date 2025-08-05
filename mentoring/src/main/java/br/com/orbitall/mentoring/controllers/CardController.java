@@ -5,6 +5,7 @@ import br.com.orbitall.mentoring.canonicals.CardInput;
 import br.com.orbitall.mentoring.canonicals.CardOutput;
 import br.com.orbitall.mentoring.models.Card;
 import br.com.orbitall.mentoring.services.CardService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,8 @@ import java.util.UUID;
   GET     /cards         ok
   GET     /cards/{id}    ok
   POST    /cards         ok
-  PUT     /cards/{id}    pending...
-  DELETE  /cards/{id}    pending...
+  PUT     /cards/{id}    ok
+  DELETE  /cards/{id}    ok
 
 */
 @RestController
@@ -27,7 +28,7 @@ public class CardController {
     private CardService service;
 
     @PostMapping
-    public CardOutput save(@RequestBody CardInput input){
+    public CardOutput save(@Valid @RequestBody CardInput input){
         log.info("Resquest info {}", input);
 
         Card card = Card.builder()
@@ -68,10 +69,31 @@ public class CardController {
         return this.service.list();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Card selectedById(@PathVariable UUID id){
         return  service.retrieve(id);
     }
+
+    @PutMapping("{id}")
+    public Card update(@PathVariable UUID id,@RequestBody CardInput input){
+        log.info("Response info {}", input);
+
+        Card card = Card.builder()
+                .number(input.number())
+                .cvv2(input.cvv2())
+                .fullName(input.fullName())
+                .validThru(input.validThru())
+                .build();
+
+        return service.update(id,card);
+    }
+
+    @DeleteMapping("{id}")
+    public Card delete(@PathVariable UUID id){
+        return service.delete(id);
+    }
+
+
 
 
 

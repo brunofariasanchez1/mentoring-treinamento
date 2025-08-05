@@ -2,6 +2,7 @@ package br.com.orbitall.mentoring.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class Card {
     //@Id = Primary key
     @Id private UUID id;
+    @Version private int version;
     private String fullName;
     private String number;
     private String cvv2;
