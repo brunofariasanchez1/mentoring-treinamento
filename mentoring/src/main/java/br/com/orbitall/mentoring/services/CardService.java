@@ -12,11 +12,13 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class CardService {
-    @Autowired
+    private final CardRepository repository;
 
-    private CardRepository repository;
+    private CardService(CardRepository repository){
+        this.repository = repository;
+    }
 
-    public Card create(Card card){
+    public void save(Card card){
         LocalDateTime now = LocalDateTime.now();
 
         card.setStatus(true);
@@ -24,9 +26,7 @@ public class CardService {
         card.setUpdatedAt(now);
         card.setId(UUID.randomUUID());
 
-        log.info("Model info {}",card);
-
-        return this.repository.save(card);
+        repository.save(card);
     }
 
     public Iterable<Card> list(){
