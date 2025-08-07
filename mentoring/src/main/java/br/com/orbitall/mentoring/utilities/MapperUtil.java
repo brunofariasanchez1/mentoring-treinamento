@@ -4,12 +4,13 @@ import br.com.orbitall.mentoring.canonicals.CardInput;
 import br.com.orbitall.mentoring.canonicals.CardOutput;
 import br.com.orbitall.mentoring.models.Card;
 
-public final class MapperUtil {
-    private MapperUtil(){
+public final class MapperUtil extends Object {
+
+    private MapperUtil() {
         super();
     }
 
-    public static Card toModel(CardInput input){
+    public static Card toModel(CardInput input) {
         return Card.builder()
                 .number(input.number())
                 .cvv2(input.cvv2())
@@ -18,22 +19,17 @@ public final class MapperUtil {
                 .build();
     }
 
-
-    public static CardOutput toCanonical(Card card){
+    public static CardOutput toCanonical(Card card) {
         return CardOutput.builder()
                 .id(card.getId())
                 .number(card.getNumber())
                 .cvv2(card.getCvv2())
-                .fullName(card.getFullName())
                 .validThru(card.getValidThru())
-                .status(card.getStatus())
+                .fullName(card.getFullName())
+                .status(card.isStatus())
                 .createdAt(card.getCreatedAt())
                 .updatedAt(card.getUpdatedAt())
                 .build();
     }
-
-
-
-
 
 }

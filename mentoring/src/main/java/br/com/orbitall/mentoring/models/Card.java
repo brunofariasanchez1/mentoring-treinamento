@@ -1,4 +1,5 @@
 package br.com.orbitall.mentoring.models;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -18,15 +19,16 @@ import java.util.UUID;
 @Builder
 @Data
 public class Card {
-    //@Id = Primary key
-    @Id private UUID id;
-    @Version private int version;
+    @Id
+    private UUID id;
+    @Version
+    private int version;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private boolean status;
+
     private String fullName;
     private String number;
     private String cvv2;
     private String validThru;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Boolean status;
-
 }
