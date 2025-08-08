@@ -1,19 +1,29 @@
 package br.com.orbitall.mentoring.exceptions;
 
+import br.com.orbitall.mentoring.models.Card;
+import br.com.orbitall.mentoring.services.CardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    private final CardService service;
+
+    private GlobalExceptionHandler(CardService service) {
+        this.service = service;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -55,5 +65,18 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        Map<String, String> error = new HashMap<>();
+        /*var id = service.pegaId(UUID id)*/
+        var id = service.pegaId(UUID.randomUUID());
+        var message  = "Invalid UUID format for parameter 'id'." + id + ".";
+
+        error.put("message", message );
+        log.error(message);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

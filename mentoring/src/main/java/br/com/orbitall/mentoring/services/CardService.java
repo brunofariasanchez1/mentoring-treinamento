@@ -50,11 +50,19 @@ public class CardService {
     }
 
     public CardOutput findById(UUID id) {
+
         Card card = repository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
 
-        return toCanonical(card);
+        pegaId(id);
+
+        if (!card.isStatus()) {
+            throw new ResourceNotFoundException("Resource status: false (id: " + id + ")");
+        }
+
+
+            return toCanonical(card);
     }
 
     public CardOutput update(UUID id, CardInput input) {
@@ -81,4 +89,16 @@ public class CardService {
 
         return toCanonical(repository.save(fetched));
     }
+
+    public UUID pegaId(UUID id) {
+        return id;
+
+    }
+
+    /*public Card pegaId(UUID id) {
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid UUID format for parameter  (id: " + id + ")"));
+    }*/
+
 }
