@@ -41,28 +41,21 @@ public class CardService {
     public List<CardOutput> findAll() {
         List<CardOutput> list = new ArrayList<>();
 
-        repository.findAll().forEach(card -> list.add(toCanonical(card)));
-
-        //StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList()).stream().map();
+        repository.findAll().forEach(card -> {
+            if (card.isStatus()) {
+                list.add(toCanonical(card));
+            }
+        });
 
         return list;
-
     }
 
     public CardOutput findById(UUID id) {
-
-        Card card = repository
-                .findById(id)
+        Card card = repository.findById(id)
+                .filter(Card::isStatus)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
 
-        pegaId(id);
-
-        if (!card.isStatus()) {
-            throw new ResourceNotFoundException("Resource status: false (id: " + id + ")");
-        }
-
-
-            return toCanonical(card);
+        return toCanonical(card);
     }
 
     public CardOutput update(UUID id, CardInput input) {
@@ -89,16 +82,4 @@ public class CardService {
 
         return toCanonical(repository.save(fetched));
     }
-
-    public UUID pegaId(UUID id) {
-        return id;
-
-    }
-
-    /*public Card pegaId(UUID id) {
-        return repository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid UUID format for parameter  (id: " + id + ")"));
-    }*/
-
 }
